@@ -1,2 +1,2 @@
 # LeetCode100
-LeetCode Hot-100
+这是一个存放我练习力扣100题代码的仓库

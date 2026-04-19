@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T438 固定窗口异位词演示</title>
+<style>
+  :root {
+    --bg: #ffffff; --bg2: #f5f5f4; --bg3: #ebebea;
+    --text: #1c1c1a; --text2: #6b6b68; --text3: #9c9a92;
+    --border: rgba(0,0,0,0.12); --border2: rgba(0,0,0,0.22);
+    --info-bg: #e6f1fb; --info-text: #185fa5; --info-border: rgba(24,95,165,0.3);
+    --success-bg: #eaf3de; --success-text: #3b6d11; --success-border: rgba(59,109,17,0.3);
+    --danger-bg: #fcebeb; --danger-text: #a32d2d; --danger-border: rgba(163,45,45,0.3);
+    --radius: 8px; --radius-lg: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1a; --bg2: #252523; --bg3: #2e2e2b;
+      --text: #e8e6df; --text2: #9c9a92; --text3: #6b6b68;
+      --border: rgba(255,255,255,0.1); --border2: rgba(255,255,255,0.2);
+      --info-bg: #0c447c; --info-text: #b5d4f4; --info-border: rgba(181,212,244,0.3);
+      --success-bg: #27500a; --success-text: #c0dd97; --success-border: rgba(192,221,151,0.3);
+      --danger-bg: #791f1f; --danger-text: #f7c1c1; --danger-border: rgba(247,193,193,0.3);
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg); color: var(--text);
+    min-height: 100vh; padding: 2rem 1rem;
+    display: flex; align-items: flex-start; justify-content: center;
+  }
+  .card {
+    background: var(--bg); border: 0.5px solid var(--border2);
+    border-radius: var(--radius-lg); padding: 1.5rem;
+    max-width: 660px; width: 100%;
+  }
+  h1 { font-size: 16px; font-weight: 500; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: var(--text2); margin-bottom: 20px; }
+  code {
+    background: var(--bg2); padding: 2px 6px; border-radius: 4px;
+    font-family: "SF Mono", "Fira Code", monospace; font-size: 12px;
+  }
+  .sect-label {
+    font-size: 11px; font-weight: 500; color: var(--text3);
+    margin-bottom: 6px; letter-spacing: .03em; text-transform: uppercase;
+  }
+  .char-cell {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 38px; height: 38px; border-radius: var(--radius);
+    border: 1.5px solid var(--border2); font-size: 16px; font-weight: 500;
+    position: relative; transition: all .25s;
+    color: var(--text); background: var(--bg);
+  }
+  .char-cell.active { background: var(--info-bg); border-color: var(--info-border); color: var(--info-text); }
+  .char-cell.new-in { background: var(--success-bg); border-color: var(--success-border); color: var(--success-text); }
+  .char-cell.old-out { background: var(--danger-bg); border-color: var(--danger-border); color: var(--danger-text); }
+  .char-cell.matched { background: var(--success-bg); border-color: var(--success-border); color: var(--success-text); }
+  .ptr-label {
+    position: absolute; top: -19px; left: 50%;
+    transform: translateX(-50%); font-size: 10px; font-weight: 500; white-space: nowrap;
+  }
+  .ptr-label.new { color: var(--success-text); }
+  .ptr-label.out { color: var(--danger-text); }
+  .freq-pip {
+    width: 38px; height: 38px; border-radius: var(--radius);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 500; border: 0.5px solid var(--border);
+    background: var(--bg2); color: var(--text3); transition: all .2s;
+  }
+  .freq-pip .fl { font-size: 9px; opacity: .7; margin-bottom: 1px; }
+  .freq-pip.has { background: var(--info-bg); border-color: var(--info-border); color: var(--info-text); }
+  .freq-pip.match { background: var(--success-bg); border-color: var(--success-border); color: var(--success-text); }
+  .freq-pip.mismatch { background: var(--danger-bg); border-color: var(--danger-border); color: var(--danger-text); }
+  .log-box {
+    background: var(--bg2); border-radius: var(--radius);
+    padding: 10px 14px; font-size: 12px; color: var(--text2);
+    min-height: 48px; line-height: 1.6; margin: 14px 0;
+  }
+  .log-box.ok { color: var(--success-text); }
+  .btn {
+    padding: 7px 16px; border: 0.5px solid var(--border2); border-radius: var(--radius);
+    background: transparent; color: var(--text); cursor: pointer; font-size: 13px;
+  }
+  .btn:hover { background: var(--bg2); }
+  .btn:active { transform: scale(.98); }
+  .btn-p { background: var(--info-bg); color: var(--info-text); border-color: var(--info-border); }
+  hr { border: none; border-top: 0.5px solid var(--border); margin: 20px 0; }
+  .legend { display: flex; gap: 16px; font-size: 12px; color: var(--text2); flex-wrap: wrap; margin-bottom: 16px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>T438 固定窗口异位词演示</h1>
+  <p class="subtitle">LeetCode 438 — int[26] 频率数组 + 固定滑动窗口</p>
+  <p style="font-size:13px;color:var(--text2);margin-bottom:16px">
+    测试用例：<code>s = "cbaebabacd"</code>，<code>p = "abc"</code>，期望：<code>[0, 6]</code>
+  </p>
+
+  <div class="legend">
+    <span style="display:flex;align-items:center;gap:5px"><span class="legend-dot" style="background:var(--info-bg);border:1px solid var(--info-border)"></span>当前窗口</span>
+    <span style="display:flex;align-items:center;gap:5px"><span class="legend-dot" style="background:var(--success-bg);border:1px solid var(--success-border)"></span>新入 / 命中</span>
+    <span style="display:flex;align-items:center;gap:5px"><span class="legend-dot" style="background:var(--danger-bg);border:1px solid var(--danger-border)"></span>旧出 / 不匹配</span>
+  </div>
+
+  <div style="margin-bottom:24px">
+    <div class="sect-label">字符串 s</div>
+    <div id="s-display" style="display:flex;gap:6px;padding-top:22px"></div>
+  </div>
+
+  <div style="display:flex;gap:32px;margin-bottom:14px;flex-wrap:wrap">
+    <div>
+      <div class="sect-label">pCount（p 频率，固定）</div>
+      <div id="pcount-display" style="display:flex;gap:5px"></div>
+    </div>
+    <div>
+      <div class="sect-label">wCount（窗口频率）</div>
+      <div id="wcount-display" style="display:flex;gap:5px"></div>
+    </div>
+  </div>
+
+  <div style="font-size:12px;color:var(--text2);margin-bottom:4px">
+    对比：<span id="cmp-label" style="font-weight:500;color:var(--text3)">—</span>
+  </div>
+
+  <div id="log-box" class="log-box"></div>
+
+  <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
+    <button class="btn btn-p" onclick="step()">下一步</button>
+    <button class="btn" onclick="reset()">重置</button>
+    <span id="done-lbl" style="font-size:12px;color:var(--text3)"></span>
+  </div>
+
+  <hr>
+  <div style="font-size:12px;color:var(--text2)">
+    结果索引：<span id="res-display" style="font-weight:500;color:var(--text)">—</span>
+  </div>
+</div>
+
+<script>
+const S = "cbaebabacd", P = "abc";
+const pLen = P.length;
+const pC = new Array(26).fill(0);
+for (const c of P) pC[c.charCodeAt(0) - 97]++;
+const LETTERS = ['a','b','c'];
+
+const steps = [];
+function buildSteps() {
+  steps.length = 0;
+  const wC = new Array(26).fill(0);
+  const res = [];
+  steps.push({wC:[...wC],res:[...res],newIn:-1,oldOut:-1,windowStart:0,windowEnd:pLen-1,phase:'init',
+    msg:`初始化：pCount 统计 p="${P}" 的字母频率。填入第一个窗口 s[0..${pLen-1}]`});
+  for (let i = 0; i < pLen; i++) wC[S.charCodeAt(i) - 97]++;
+  const initEq = pC.every((v,i) => v === wC[i]);
+  if (initEq) res.push(0);
+  steps.push({wC:[...wC],res:[...res],newIn:-1,oldOut:-1,windowStart:0,windowEnd:pLen-1,
+    phase:initEq?'found':'check',
+    msg:`第一个窗口 s[0..${pLen-1}] = "${S.slice(0,pLen)}"  →  ${initEq?'pCount == wCount，加入结果 [0]':'pCount ≠ wCount，不是异位词'}`});
+  for (let i = pLen; i < S.length; i++) {
+    const newChar = S[i], oldChar = S[i - pLen];
+    wC[newChar.charCodeAt(0) - 97]++;
+    wC[oldChar.charCodeAt(0) - 97]--;
+    const eq = pC.every((v,j) => v === wC[j]);
+    const start = i - pLen + 1;
+    if (eq) res.push(start);
+    steps.push({wC:[...wC],res:[...res],newIn:i,oldOut:i-pLen,windowStart:start,windowEnd:i,
+      phase:eq?'found':'check',
+      msg:`新入 s[${i}]='${newChar}'  进  ·  旧出 s[${i-pLen}]='${oldChar}'  出  →  窗口 s[${start}..${i}]="${S.slice(start,i+1)}"  →  ${eq?`pCount == wCount，加入结果 [${start}]`:'pCount ≠ wCount'}`});
+  }
+  steps.push({wC:[...wC],res:[...res],newIn:-1,oldOut:-1,windowStart:-1,windowEnd:-1,phase:'end',
+    msg:`遍历结束，最终结果：[${res.join(', ')}]`});
+}
+buildSteps();
+
+let cur = -1;
+
+function renderPCount() {
+  const d = document.getElementById('pcount-display');
+  d.innerHTML = '';
+  LETTERS.forEach(l => {
+    const idx = l.charCodeAt(0) - 97, v = pC[idx];
+    const pip = document.createElement('div');
+    pip.className = 'freq-pip' + (v > 0 ? ' has' : '');
+    pip.innerHTML = `<span class="fl">${l}</span>${v}`;
+    d.appendChild(pip);
+  });
+}
+
+function renderStep(i) {
+  const st = steps[i];
+  const sDisp = document.getElementById('s-display');
+  sDisp.innerHTML = '';
+  S.split('').forEach((ch, idx) => {
+    const cell = document.createElement('div');
+    cell.className = 'char-cell';
+    if (idx >= st.windowStart && idx <= st.windowEnd && st.windowStart >= 0) cell.classList.add('active');
+    if (idx === st.newIn) cell.classList.add('new-in');
+    if (idx === st.oldOut) cell.classList.add('old-out');
+    if (st.phase === 'found' && idx >= st.windowStart && idx <= st.windowEnd && st.windowStart >= 0) cell.classList.add('matched');
+    cell.textContent = ch;
+    if (idx === st.newIn) { const l = document.createElement('span'); l.className = 'ptr-label new'; l.textContent = '进'; cell.appendChild(l); }
+    if (idx === st.oldOut) { const l = document.createElement('span'); l.className = 'ptr-label out'; l.textContent = '出'; cell.appendChild(l); }
+    sDisp.appendChild(cell);
+  });
+
+  const wd = document.getElementById('wcount-display');
+  wd.innerHTML = '';
+  LETTERS.forEach(l => {
+    const idx = l.charCodeAt(0) - 97, wv = st.wC[idx], pv = pC[idx];
+    const pip = document.createElement('div');
+    let cls = 'freq-pip';
+    if (wv > 0 || pv > 0) { if (wv === pv) cls += ' match'; else if (wv > 0) cls += ' mismatch'; else cls += ' has'; }
+    pip.className = cls;
+    pip.innerHTML = `<span class="fl">${l}</span>${wv}`;
+    wd.appendChild(pip);
+  });
+
+  const eq = st.windowStart >= 0 && pC.every((v,j) => v === st.wC[j]);
+  const cmp = document.getElementById('cmp-label');
+  if (st.phase === 'init') { cmp.textContent = '—'; cmp.style.color = 'var(--text3)'; }
+  else if (st.phase === 'end') { cmp.textContent = '完成'; cmp.style.color = 'var(--text3)'; }
+  else if (eq) { cmp.textContent = 'pCount == wCount  ✓ 异位词！'; cmp.style.color = 'var(--success-text)'; }
+  else { cmp.textContent = 'pCount ≠ wCount'; cmp.style.color = 'var(--danger-text)'; }
+
+  const lb = document.getElementById('log-box');
+  lb.textContent = st.msg;
+  lb.className = 'log-box' + (st.phase === 'found' ? ' ok' : '');
+
+  const rd = document.getElementById('res-display');
+  rd.textContent = st.res.length > 0 ? '[' + st.res.join(', ') + ']' : '（暂无）';
+
+  if (i === steps.length - 1) document.getElementById('done-lbl').textContent = '演示完毕';
+}
+
+function step() { if (cur >= steps.length - 1) return; cur++; renderStep(cur); }
+
+function reset() {
+  cur = -1;
+  const sDisp = document.getElementById('s-display');
+  sDisp.innerHTML = '';
+  S.split('').forEach(ch => {
+    const cell = document.createElement('div'); cell.className = 'char-cell'; cell.textContent = ch;
+    sDisp.appendChild(cell);
+  });
+  const wd = document.getElementById('wcount-display');
+  wd.innerHTML = '';
+  LETTERS.forEach(l => {
+    const pip = document.createElement('div'); pip.className = 'freq-pip';
+    pip.innerHTML = `<span class="fl">${l}</span>0`;
+    wd.appendChild(pip);
+  });
+  document.getElementById('cmp-label').textContent = '—';
+  document.getElementById('cmp-label').style.color = 'var(--text3)';
+  document.getElementById('log-box').textContent = '';
+  document.getElementById('log-box').className = 'log-box';
+  document.getElementById('res-display').textContent = '—';
+  document.getElementById('done-lbl').textContent = '';
+}
+
+renderPCount();
+reset();
+</script>
+</body>
+</html>

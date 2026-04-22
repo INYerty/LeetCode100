@@ -10,7 +10,7 @@
 
 - 已完成：**30 / 100**
 
-![Learning Progress](https://progress-bar.dev/30/?title=Solved&width=500&color=22c55e)
+![Learning Progress](https://img.shields.io/badge/Solved-30%2F100%20(30%25)-22c55e?style=for-the-badge)
 
 > 每次新增题解后，请同步更新“已完成数量”、进度条数值和下方题目分布统计。
 

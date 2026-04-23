@@ -8,15 +8,16 @@ public class T206 {
  https://www.bilibili.com/video/BV1nB4y1i7eL/?spm_id_from=333.337.search-card.all.click&vd_source=2f45539d411bad86b3920563c6a0cd76
     NB*/
 
-    public ListNode reverse(ListNode cur,ListNode pre){
-        if(cur == null) return pre;
+    public ListNode reverse(ListNode cur, ListNode pre) {
+        if (cur == null) return pre;
         ListNode temp = cur.next;
         cur.next = pre;
-        reverse(temp,cur);
+        reverse(temp, cur);
         return pre;
     }
+
     public ListNode reverseList(ListNode head) {
-        return reverse(head,null);
+        return reverse(head, null);
     }
 }
 

@@ -1,0 +1,256 @@
+
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .container { padding: 1rem; font-family: var(--font-sans); }
+  .section-label { font-size: 12px; color: var(--color-text-secondary); margin: 0 0 6px; }
+  .node-row { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; min-height: 42px; }
+  .node { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 8px; font-size: 13px; font-weight: 500; border: 0.5px solid var(--color-border-secondary); background: var(--color-background-secondary); color: var(--color-text-primary); transition: all 0.35s ease; position: relative; }
+  .node.active { background: #EEEDFE; border-color: #7F77DD; color: #3C3489; }
+  .node.merged { background: #E1F5EE; border-color: #1D9E75; color: #085041; }
+  .node.split { background: #FAEEDA; border-color: #BA7517; color: #633806; }
+  .node.slow { background: #FAEEDA; border-color: #BA7517; color: #633806; }
+  .node.fast { background: #FCEBEB; border-color: #E24B4A; color: #791F1F; }
+  .arrow { color: var(--color-text-tertiary); font-size: 12px; }
+  .step-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: 12px; padding: 12px 16px; margin-bottom: 10px; }
+  .step-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 4px; }
+  .step-desc { font-size: 12px; color: var(--color-text-secondary); margin: 0; line-height: 1.5; }
+  .code-hint { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-secondary); background: var(--color-background-secondary); padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 4px; }
+  .btn-row { display: flex; gap: 8px; margin: 12px 0; flex-wrap: wrap; }
+  button { font-size: 12px; padding: 6px 14px; border-radius: 8px; border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-primary); cursor: pointer; transition: background 0.15s; }
+  button:hover { background: var(--color-background-secondary); }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  button.primary { background: #EEEDFE; border-color: #7F77DD; color: #3C3489; }
+  .progress { font-size: 12px; color: var(--color-text-secondary); margin: 0 0 10px; }
+  .legend { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+  .legend-item { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--color-text-secondary); }
+  .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+  .separator { height: 0.5px; background: var(--color-border-tertiary); margin: 10px 0; }
+  .level-block { margin-bottom: 14px; }
+  .level-tag { font-size: 11px; color: var(--color-text-tertiary); margin-bottom: 4px; }
+  .groups-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-start; }
+  .group { border: 0.5px dashed var(--color-border-secondary); border-radius: 8px; padding: 6px 8px; }
+</style>
+<div class="container">
+  <h2 class="sr-only">链表归并排序动画演示</h2>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#EEEDFE;border:0.5px solid #7F77DD"></div> 当前处理</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#FAEEDA;border:0.5px solid #BA7517"></div> slow/mid</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#FCEBEB;border:0.5px solid #E24B4A"></div> fast指针</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#E1F5EE;border:0.5px solid #1D9E75"></div> 已归并</div>
+  </div>
+
+  <div id="step-card" class="step-card">
+    <p class="step-title" id="step-title">点击"下一步"开始</p>
+    <p class="step-desc" id="step-desc">输入链表：4 → 2 → 1 → 3，将使用归并排序完成升序排列</p>
+    <span class="code-hint" id="code-hint"></span>
+  </div>
+
+  <div class="progress" id="progress">步骤 0 / 14</div>
+
+  <div class="btn-row">
+    <button id="btn-prev" onclick="prevStep()" disabled>← 上一步</button>
+    <button class="primary" id="btn-next" onclick="nextStep()">下一步 →</button>
+    <button onclick="reset()">重置</button>
+    <button onclick="autoPlay()" id="btn-auto">自动播放</button>
+  </div>
+
+  <div class="separator"></div>
+  <div id="visual-area"></div>
+</div>
+
+<script>
+const STEPS = [
+  {
+    title: "初始链表",
+    desc: "原始链表：4 → 2 → 1 → 3。目标：排成升序。",
+    code: "",
+    levels: [
+      { label: "原始", groups: [["4","2","1","3"]], state: ["active","active","active","active"] }
+    ]
+  },
+  {
+    title: "第1层：找中点（快慢指针）",
+    desc: "slow 每次走1步，fast 每次走2步。当 fast 到末尾，slow 正好在中点。",
+    code: "slow=slow.next; fast=fast.next.next",
+    levels: [
+      { label: "全链表", groups: [["4","2","1","3"]], state: ["slow","active","fast","active"] }
+    ]
+  },
+  {
+    title: "第1层：找到中点，准备切断",
+    desc: "slow 停在 '1'（索引2），这就是右半段的头。pre.next = null 切断链表。",
+    code: "pre.next = null  // 切断！",
+    levels: [
+      { label: "左段", groups: [["4","2"]], state: ["active","active"] },
+      { label: "右段", groups: [["1","3"]], state: ["active","active"] },
+    ]
+  },
+  {
+    title: "第2层左：继续对 [4,2] 找中点",
+    desc: "递归进入左段 [4,2]，再次用快慢指针找中点。",
+    code: "sortList([4,2]) 递归",
+    levels: [
+      { label: "左段递归", groups: [["4","2"]], state: ["slow","fast"] }
+    ]
+  },
+  {
+    title: "第2层左：切断为 [4] 和 [2]",
+    desc: "单个节点即为基础情况（递归终止）。[4] 和 [2] 各自是有序链表。",
+    code: "if (head.next == null) return head",
+    levels: [
+      { label: "左左", groups: [["4"]], state: ["active"] },
+      { label: "左右", groups: [["2"]], state: ["active"] },
+    ]
+  },
+  {
+    title: "第2层左：归并 [4] 和 [2]",
+    desc: "比较 4 vs 2，2更小，先取2；再拼4。得到有序链表 [2,4]。",
+    code: "merge([4],[2]) → [2,4]",
+    levels: [
+      { label: "归并结果", groups: [["2","4"]], state: ["merged","merged"] }
+    ]
+  },
+  {
+    title: "第2层右：对 [1,3] 找中点",
+    desc: "递归进入右段 [1,3]，同样找中点。",
+    code: "sortList([1,3]) 递归",
+    levels: [
+      { label: "右段递归", groups: [["1","3"]], state: ["slow","fast"] }
+    ]
+  },
+  {
+    title: "第2层右：切断为 [1] 和 [3]",
+    desc: "[1] 和 [3] 都是单节点，直接返回。",
+    code: "if (head.next == null) return head",
+    levels: [
+      { label: "右左", groups: [["1"]], state: ["active"] },
+      { label: "右右", groups: [["3"]], state: ["active"] },
+    ]
+  },
+  {
+    title: "第2层右：归并 [1] 和 [3]",
+    desc: "比较 1 vs 3，1更小，先取1；再拼3。得到有序链表 [1,3]。",
+    code: "merge([1],[3]) → [1,3]",
+    levels: [
+      { label: "归并结果", groups: [["1","3"]], state: ["merged","merged"] }
+    ]
+  },
+  {
+    title: "现在有两个有序子链表",
+    desc: "左边排好了 [2,4]，右边排好了 [1,3]。接下来做最终归并！",
+    code: "merge([2,4], [1,3])",
+    levels: [
+      { label: "左有序段", groups: [["2","4"]], state: ["merged","merged"] },
+      { label: "右有序段", groups: [["1","3"]], state: ["merged","merged"] },
+    ]
+  },
+  {
+    title: "归并：比较 2 vs 1",
+    desc: "1 < 2，取 1 放入结果。右指针后移。",
+    code: "l2.val(1) < l1.val(2) → 取 l2",
+    levels: [
+      { label: "结果", groups: [["1"]], state: ["merged"] },
+      { label: "剩余左", groups: [["2","4"]], state: ["active","active"] },
+      { label: "剩余右", groups: [["3"]], state: ["active"] },
+    ]
+  },
+  {
+    title: "归并：比较 2 vs 3",
+    desc: "2 < 3，取 2 放入结果。左指针后移。",
+    code: "l1.val(2) < l2.val(3) → 取 l1",
+    levels: [
+      { label: "结果", groups: [["1","2"]], state: ["merged","merged"] },
+      { label: "剩余左", groups: [["4"]], state: ["active"] },
+      { label: "剩余右", groups: [["3"]], state: ["active"] },
+    ]
+  },
+  {
+    title: "归并：比较 4 vs 3",
+    desc: "3 < 4，取 3 放入结果。右指针走完。",
+    code: "l2.val(3) < l1.val(4) → 取 l2",
+    levels: [
+      { label: "结果", groups: [["1","2","3"]], state: ["merged","merged","merged"] },
+      { label: "剩余左", groups: [["4"]], state: ["active"] },
+    ]
+  },
+  {
+    title: "归并完成！",
+    desc: "右段为空，直接把剩余左段 [4] 接上。最终结果：1 → 2 → 3 → 4 ✓",
+    code: "curr.next = (l1!=null) ? l1 : l2",
+    levels: [
+      { label: "最终有序链表", groups: [["1","2","3","4"]], state: ["merged","merged","merged","merged"] }
+    ]
+  },
+];
+
+let cur = -1;
+let autoTimer = null;
+
+function render() {
+  const s = STEPS[cur] || null;
+  if (!s) {
+    document.getElementById('visual-area').innerHTML = '';
+    document.getElementById('step-title').textContent = '点击"下一步"开始';
+    document.getElementById('step-desc').textContent = '输入链表：4 → 2 → 1 → 3，将使用归并排序完成升序排列';
+    document.getElementById('code-hint').textContent = '';
+    document.getElementById('progress').textContent = '步骤 0 / ' + STEPS.length;
+    document.getElementById('btn-prev').disabled = true;
+    document.getElementById('btn-next').disabled = false;
+    return;
+  }
+  document.getElementById('step-title').textContent = s.title;
+  document.getElementById('step-desc').textContent = s.desc;
+  document.getElementById('code-hint').textContent = s.code;
+  document.getElementById('progress').textContent = '步骤 ' + (cur+1) + ' / ' + STEPS.length;
+  document.getElementById('btn-prev').disabled = cur <= 0;
+  document.getElementById('btn-next').disabled = cur >= STEPS.length - 1;
+
+  let html = '';
+  for (const lev of s.levels) {
+    html += '<div class="level-block">';
+    html += '<div class="level-tag">' + lev.label + '</div>';
+    html += '<div class="groups-row">';
+    for (const grp of lev.groups) {
+      html += '<div class="group"><div class="node-row">';
+      for (let i = 0; i < grp.length; i++) {
+        const st = lev.state[i] || '';
+        html += '<div class="node ' + st + '">' + grp[i] + '</div>';
+        if (i < grp.length - 1) html += '<span class="arrow">→</span>';
+      }
+      html += '</div></div>';
+    }
+    html += '</div></div>';
+  }
+  document.getElementById('visual-area').innerHTML = html;
+}
+
+function nextStep() {
+  if (cur < STEPS.length - 1) { cur++; render(); }
+}
+function prevStep() {
+  if (cur > 0) { cur--; render(); }
+}
+function reset() {
+  if (autoTimer) { clearInterval(autoTimer); autoTimer = null; document.getElementById('btn-auto').textContent = '自动播放'; }
+  cur = -1; render();
+}
+function autoPlay() {
+  if (autoTimer) {
+    clearInterval(autoTimer); autoTimer = null;
+    document.getElementById('btn-auto').textContent = '自动播放';
+    return;
+  }
+  document.getElementById('btn-auto').textContent = '暂停';
+  autoTimer = setInterval(() => {
+    if (cur >= STEPS.length - 1) {
+      clearInterval(autoTimer); autoTimer = null;
+      document.getElementById('btn-auto').textContent = '自动播放';
+      return;
+    }
+    cur++; render();
+  }, 1600);
+}
+
+render();
+</script>

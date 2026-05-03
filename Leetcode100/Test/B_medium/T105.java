@@ -3,12 +3,14 @@ package Test.B_medium;
 import java.util.ArrayList;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 
 public class T105 {
     public TreeNode buildTree(int[] preorder, int[] inorder) {
         return re(preorder,inorder);
     }
 
+    /* FirstTime
     public TreeNode re(int[] preorder, int[] inorder){
         if (preorder.length == 0) return null;
         // pre 取第一个元素 即为最根节点
@@ -52,6 +54,56 @@ public class T105 {
         }
         root.left = re(preorderLeftArray,inorderLeftArray);
         root.right = re(preorderRightArray,inorderRightArray);
+        return root;
+    }*/
+
+    // SecondTimeExec
+
+    public TreeNode re(int[] preorder, int[] inorder){
+        if (preorder.length==0) return null;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < inorder.length; i++) {
+            map.put(inorder[i],i);
+        }
+        Integer rootIndex = map.get(preorder[0]);
+        TreeNode root = new TreeNode(preorder[0]);
+
+        //分割中序序列
+        LinkedList<Integer> inLeftRoot = new LinkedList<>();
+        for(int i = 0;i<rootIndex;i++){
+            inLeftRoot.add(inorder[i]);
+        }
+        LinkedList<Integer> inRightRoot = new LinkedList<>();
+        for(int i = rootIndex+1;i<inorder.length;i++){
+            inRightRoot.add(inorder[i]);
+        }
+        //分割先序遍历序列
+        LinkedList<Integer> preLeftRoot = new LinkedList<>();
+        for (int i = 1;i<=rootIndex;i++){
+            preLeftRoot.add(preorder[i]);
+        }
+        LinkedList<Integer> preRightRoot = new LinkedList<>();
+        for (int i = rootIndex+1;i<preorder.length;i++){
+            preRightRoot.add(preorder[i]);
+        }
+
+        int[] preLeftRootArray  =new int[preLeftRoot.size()];
+        int[] inLeftRootArray  =new int[inLeftRoot.size()];
+        for(int i =0;i< preLeftRoot.size();i++){
+            preLeftRootArray[i] = preLeftRoot.get(i);
+            inLeftRootArray[i] = inLeftRoot.get(i);
+        }
+
+        int[] preRightRootArray  =new int[preRightRoot.size()];
+        int[] inRightRootArray  =new int[inRightRoot.size()];
+        for(int i =0;i< inRightRoot.size();i++){
+            preRightRootArray[i] = preRightRoot.get(i);
+            inRightRootArray[i] = inRightRoot.get(i);
+        }
+
+        root.left = re(preLeftRootArray,inLeftRootArray);
+        root.right = re(preRightRootArray,inRightRootArray);
+
         return root;
     }
 }

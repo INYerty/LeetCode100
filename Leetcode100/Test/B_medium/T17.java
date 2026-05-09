@@ -3,7 +3,7 @@ package Test.B_medium;
 import java.util.ArrayList;
 import java.util.List;
 
-
+//TODO  未理解
 
 public class T17 {
     //设置全局列表存储最后的结果

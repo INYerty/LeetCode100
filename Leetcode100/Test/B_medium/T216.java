@@ -32,4 +32,12 @@ public class T216 {
         }
         return sum;
     }
+
+    public static void main(String[] args) {
+        T216 t216 = new T216();
+        System.out.println(t216.combinationSum3(3,7));
+        System.out.println(t216.combinationSum3(3,9));
+        System.out.println(t216.combinationSum3(4,1));
+
+    }
 }

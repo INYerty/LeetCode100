@@ -1,3 +1,4 @@
+/*
 package Test.B_medium;
 
 public class T994 {
@@ -22,3 +23,4 @@ public class T994 {
 
 
 }
+*/

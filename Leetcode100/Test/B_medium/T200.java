@@ -1,7 +1,11 @@
 package Test.B_medium;
 
+import java.util.LinkedList;
+
 public class T200 {
-    public int numIslands(char[][] grid) {
+/*
+// 深搜dfs
+public int numIslands(char[][] grid) {
         int ans = 0;
         boolean[][]visited =new boolean[grid.length][grid[0].length];
         for (int i = 0; i < grid.length; i++) {
@@ -29,7 +33,50 @@ public class T200 {
                 dfs(grid,visited,newX,newY);
             }
         }
+    }*/
+
+    //广搜bfs
+    public int numIslands(char[][] grid) {
+        int ans = 0;
+        boolean[][] visited = new boolean[grid.length][grid[0].length];
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] == '1' && !visited[i][j]){
+                    ans++;
+                    visited[i][j] = true;
+                    bfs(grid,i,j,visited);
+                }
+            }
+        }
+        return ans;
     }
+
+    public void bfs(char[][] grid,int x,int y,boolean[][] visited){
+        LinkedList<int[]> queue = new LinkedList<>();
+        int[][] dir = {{0,1},{1,0},{0,-1},{-1,0}};
+        queue.add(new int[]{x,y});
+
+        while (!queue.isEmpty()){
+            int[] poll = queue.poll();
+            for (int i = 0; i < 4; i++) {
+                int newX = poll[0] + dir[i][0];
+                int newY = poll[1] + dir[i][1];
+                // 判断是否越界
+                if (newX<0||newY<0||newX>=grid.length||newY>=grid[0].length){
+                    continue;
+                }
+                if (grid[newX][newY] == '1' && !visited[newX][newY]){
+                    char c = grid[newX][newY];
+                    queue.add(new int[]{newX,newY});
+                    visited[newX][newY] = true;
+                }
+            }
+        }
+
+
+
+    }
+
 
 
     public static void main(String[] args) {

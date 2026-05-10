@@ -4,45 +4,43 @@ import java.util.LinkedList;
 
 public class T994 {
     //多源dfs
-
     public int orangesRotting(int[][] grid) {
-        int[][] dir = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        int minute = 0;
         int fresh = 0;
-        int time = 0;
         LinkedList<int[]> queue = new LinkedList<>();
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[0].length; j++) {
-                if (grid[i][j] == 1) {
+                if (grid[i][j] == 1){
                     ++fresh;
-                } else if (grid[i][j] == 2) {
-                    queue.add(new int[]{i, j});
+                }else if(grid[i][j] == 2){
+                    queue.add(new int[]{i,j});
                 }
             }
         }
 
-        while (!queue.isEmpty() && fresh != 0) {
+        int[][] dir = {{1,0},{-1,0},{0,1},{0,-1}};
+
+        while (!queue.isEmpty() && fresh!= 0){
             int size = queue.size();
             for (int i = 0; i < size; i++) {
                 int[] poll = queue.poll();
                 for (int j = 0; j < 4; j++) {
                     int newX = poll[0] + dir[j][0];
                     int newY = poll[1] + dir[j][1];
-                    if (newX < 0 || newY < 0 || newX >= grid.length || newY >= grid[0].length || grid[newX][newY] != 1) {
-                        continue;
-                    }
-                    if (grid[newX][newY] == 1) {
+                    if (newX<0||newY<0||newX>=grid.length||newY>=grid[0].length) continue;
+                    if (grid[newX][newY] == 1){
                         grid[newX][newY] = 2;
-                        queue.add(new int[]{newX, newY});
+                        queue.add(new int[]{newX,newY});
                         --fresh;
                     }
                 }
             }
-            ++time;
+            ++minute;
         }
-        if (fresh != 0) {
+        if (fresh > 0){
             return -1;
-        } else {
-            return time;
+        }else{
+            return minute;
         }
     }
 

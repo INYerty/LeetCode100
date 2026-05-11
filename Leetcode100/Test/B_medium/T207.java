@@ -33,8 +33,6 @@ public class T207 {
             }
         }
 
-
-
         while (!queue.isEmpty()){
             Integer poll = queue.poll();
             // 队列弹出元素  继续查找有关弹出的这个节点的信息  那么如果其他节点的preLearn列表中含有poll节点  将其删除  实现入度-1
@@ -58,6 +56,4 @@ public class T207 {
         return addToQueueSum == numCourses;
 
     }
-
-
 }

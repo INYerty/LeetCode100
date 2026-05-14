@@ -23,6 +23,10 @@ public class T40 {
         }
 
         for (int i = startIndex; i < candidates.length; i++) {
+            /*
+              树层不重复，树枝可重复这就话很适合描述这题，
+              那么树枝可重复这句话如果在题目给出"一个元素不能使用两次"的时候就不适用了
+             */
             if (i>startIndex && candidates[i]==candidates[i-1]) continue;
             path.add(candidates[i]);
             backTrace(candidates,target,i+1);

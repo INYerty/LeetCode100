@@ -18,6 +18,8 @@ public class T90 {
         result.add(new ArrayList<>(path));
         for(int i = startIndex;i<nums.length;i++){
             // 同层去重
+            /*树层不重复，树枝可重复这就话很适合描述这题，
+            那么树枝可重复这句话如果在题目给出"一个元素不能使用两次"的时候就不适用了*/
             if(i > startIndex && nums[i] == nums[i - 1]) {
                 continue;
             }

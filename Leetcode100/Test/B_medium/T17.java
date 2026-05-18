@@ -1,53 +1,42 @@
 package Test.B_medium;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-//TODO  未理解
 
 public class T17 {
-    //设置全局列表存储最后的结果
-    List<String> list = new ArrayList<>();
+    HashMap<String, List<String>> map = new HashMap<>();
+    List<String> result = new ArrayList<>();
+    StringBuilder path = new StringBuilder();
 
     public List<String> letterCombinations(String digits) {
-        if (digits == null || digits.isEmpty()) {
-            return list;
-        }
-        //初始对应所有的数字，为了直接对应2-9，新增了两个无效的字符串""
-        String[] numString = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
-        //迭代处理
-        backTracking(digits, numString, 0);
-        return list;
+        if (digits == null || digits.isEmpty()) return result;
 
+        map.put("2", List.of("a", "b", "c"));
+        map.put("3", List.of("d", "e", "f"));
+        map.put("4", List.of("g", "h", "i"));
+        map.put("5", List.of("j", "k", "l"));
+        map.put("6", List.of("m", "n", "o"));
+        map.put("7", List.of("p", "q", "r", "s"));
+        map.put("8", List.of("t", "u", "v"));
+        map.put("9", List.of("w", "x", "y", "z"));
+
+        backTrace(0, digits);
+        return result;
     }
 
-    //每次迭代获取一个字符串，所以会涉及大量的字符串拼接，所以这里选择更为高效的 StringBuilder
-    StringBuilder temp = new StringBuilder();
-
-    //比如digits如果为"23",num 为0，则str表示2对应的 abc
-    public void backTracking(String digits, String[] numString, int num) {
-        //遍历全部一次记录一次得到的字符串
-        if (num == digits.length()) {
-            list.add(temp.toString());
+    public void backTrace(int startIndex, String digits) {
+        if (startIndex == digits.length()) {
+            result.add(path.toString());
             return;
         }
-        //str 表示当前num对应的字符串
-        String str = numString[digits.charAt(num) - '0'];
-        for (int i = 0; i < str.length(); i++) {
-            temp.append(str.charAt(i));
-            //递归，处理下一层
-            backTracking(digits, numString, num + 1);
-            //剔除末尾的继续尝试
-            temp.deleteCharAt(temp.length() - 1);
+        String digitStr = String.valueOf(digits.charAt(startIndex));
+        List<String> alphabets = map.get(digitStr);
+        for (int i = 0; i < alphabets.size(); i++) {
+            path.append(alphabets.get(i));
+            backTrace(startIndex + 1, digits);
+            path.deleteCharAt(path.length() - 1);
         }
     }
-
-    static void main() {
-        T17 t17 = new T17();
-        System.out.println(t17.letterCombinations("23"));
-        System.out.println(t17.letterCombinations(""));
-        System.out.println(t17.letterCombinations("2"));
-    }
-
-
 }
+

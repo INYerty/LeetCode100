@@ -1,3 +1,5 @@
+package Test.B_medium;
+
 public class T34 {
     public int[] searchRange(int[] nums, int target) {
         int leftSite = binarySearch(nums,target,true);

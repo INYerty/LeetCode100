@@ -1,3 +1,5 @@
+package Test.B_medium;
+
 public class T33 {
     /**
     旋转将此数组分成了两个单调递增的区间，我们需要判断。mid指针落到了哪一个区间上，那就自然分成了两种情况，第一种是落到了第一个单增区间上，此时`nums[left]`<=`nums[right]`的，这时候判断target在不在这个区间上，那么用target比较边界的最大最小值就行了，如果在，更新right指针，缩小一个位，`right=mid-1`，直至找到target；如果不在这个区间。我们要从`[mid,right]`区间找target，那就更新left=mid+1。如果mid落在了第二个单增区间上，先判断target在不在`[mid.right]` 这个单增区间上，如果在，我们更新左指针`left = mid+1`如果不在，说明target落在了`[left,mid]` 上,更新右指针`right = mid-1`。 */

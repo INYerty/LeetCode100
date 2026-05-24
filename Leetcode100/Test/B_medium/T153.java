@@ -10,7 +10,7 @@ public class T153 {
             if(nums[left]<=nums[mid]){
                 left = mid + 1;
             }else{
-                right = mid;// 为什么不是mid-1不是mid, 最小值一定是存在于第二个递增区间中的  所以mid可能是最小值
+                right = mid;// 为什么不是mid-1不是mid, 最小值一定是存在于第二个递增区间中的 mid在第二个递增区间 所以mid可能是最小值
             }
         }
         return -1;

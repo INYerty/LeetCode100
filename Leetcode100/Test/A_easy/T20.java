@@ -1,7 +1,6 @@
 package Test.A_easy;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Stack;
 
 public class T20 {

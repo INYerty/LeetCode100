@@ -1,6 +1,9 @@
 package Test.B_medium;
 
 
+import java.util.Comparator;
+import java.util.PriorityQueue;
+
 public class T215 {
 
     // 大顶堆
@@ -83,7 +86,7 @@ public class T215 {
         return nums[k];*/
 
         // 维护K大小的小顶堆
-        for (int i = k/2 - 1; i >= 0; i--) {
+        /*for (int i = k/2 - 1; i >= 0; i--) {
             heapify(nums, k, i);
         }
 
@@ -94,6 +97,27 @@ public class T215 {
                 heapify(nums, k, 0);
             }
         }
-        return nums[0];
+        return nums[0];*/
+
+        // 优先级队列 (大顶堆)
+        PriorityQueue<Integer> pq = new PriorityQueue<>(
+                // 匿名内部类
+                new Comparator<Integer>() {
+                    @Override
+                    public int compare(Integer o1, Integer o2) {
+                        return o2 - o1;
+                    }
+                }
+        );
+        for(int i = 0;i<nums.length;i++){
+            pq.offer(nums[i]);
+        }
+        int res = 0;
+        for (int i = 0; i < k; i++) {
+            if (!pq.isEmpty()){
+                res= pq.poll();
+            }
+        }
+        return res;
     }
 }

@@ -20,6 +20,6 @@ public class T452 {
                 right = point[1];
             }
         }
-        return list.size();
+        return list.size()+1;
     }
 }

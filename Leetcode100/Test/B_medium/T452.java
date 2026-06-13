@@ -21,4 +21,26 @@ public class T452 {
         }
         return list.size()+1;
     }
+
+    // 方法二：————————————————————————————————————————————————————————————————————————
+    public int findMinArrowShots2(int[][] points) {
+        Arrays.sort(points, (p1,p2)->{
+            return Integer.compare(p1[0],p2[0]);
+        });
+        int left = Integer.MIN_VALUE;
+        int right = Integer.MAX_VALUE;
+        List<int[]> list = new ArrayList<>();
+        for(int[] point : points){
+            if(point[0] <= right){
+                if(point[1] <= right){
+                    right = point[1];
+                }
+            }else{
+                list.add(new int[]{left,right});
+                left = point[0];
+                right = point[1];
+            }
+        }
+        return list.size() + 1;
+    }
 }

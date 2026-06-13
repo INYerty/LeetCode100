@@ -1,4 +1,15 @@
 package Test.A_easy;
+/**
+ * 101. 对称二叉树
+ *
+ * 给你一个二叉树的根节点 root ， 检查它是否轴对称。
+ * 提示：
+ * * 树中节点数目在范围 [1, 1000] 内
+ * * -100 <= Node.val <= 100
+ * 进阶：你可以运用递归和迭代两种方法解决这个问题吗？
+ *
+ * 链接：https://leetcode.cn/problems/symmetric-tree/
+ */
 
 public class T101 {
     public boolean isSymmetric(TreeNode root) {

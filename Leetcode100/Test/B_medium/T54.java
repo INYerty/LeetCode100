@@ -3,6 +3,18 @@ package Test.B_medium;
 
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * 54. 螺旋矩阵
+ *
+ * 给你一个 m 行 n 列的矩阵 matrix ，请按照 顺时针螺旋顺序 ，返回矩阵中的所有元素。
+ * 提示：
+ * * m == matrix.length
+ * * n == matrix[i].length
+ * * 1 <= m, n <= 10
+ * * -100 <= matrix[i][j] <= 100
+ *
+ * 链接：https://leetcode.cn/problems/spiral-matrix/
+ */
 
 public class T54 {
     public List<Integer> spiralOrder(int[][] matrix) {
@@ -58,5 +70,4 @@ public class T54 {
         System.out.println( integers);
     }
 }
-
 

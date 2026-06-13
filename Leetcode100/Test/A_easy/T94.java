@@ -4,6 +4,17 @@ import java.awt.image.renderable.RenderableImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+/**
+ * 94. 二叉树的中序遍历
+ *
+ * 给定一个二叉树的根节点 root ，返回 它的 中序 遍历 。
+ * 提示：
+ * * 树中节点数目在范围 [0, 100] 内
+ * * -100 <= Node.val <= 100
+ * 进阶: 递归算法很简单，你可以通过迭代算法完成吗？
+ *
+ * 链接：https://leetcode.cn/problems/binary-tree-inorder-traversal/
+ */
 
 public class T94 {
     //中序遍历  左根右

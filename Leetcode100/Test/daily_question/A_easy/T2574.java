@@ -1,6 +1,20 @@
 package Test.daily_question.A_easy;
 
 import java.util.Arrays;
+/**
+ * 2574. 左右元素和的差值
+ *
+ * 给你一个下标从 0 开始的长度为 n 的整数数组 nums。
+ * 定义两个数组 leftSum 和 rightSum，其中：
+ * * leftSum[i] 是数组 nums 中下标 i 左侧元素之和。如果不存在对应的元素，leftSum[i] = 0 。
+ * * rightSum[i] 是数组 nums 中下标 i 右侧元素之和。如果不存在对应的元素，rightSum[i] = 0 。
+ * 返回长度为 n 数组 answer，其中 answer[i] = |leftSum[i] - rightSum[i]|。
+ * 提示：
+ * * 1 <= nums.length <= 1000
+ * * 1 <= nums[i] <= 105
+ *
+ * 链接：https://leetcode.cn/problems/left-and-right-sum-differences/
+ */
 
 public class T2574 {
     public int[] leftRightDifference(int[] nums) {

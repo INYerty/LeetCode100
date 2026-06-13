@@ -1,6 +1,17 @@
 package Test.B_medium;
 
 import java.util.*;
+/**
+ * 49. 字母异位词分组
+ *
+ * 给你一个字符串数组，请你将 字母异位词 组合在一起。可以按任意顺序返回结果列表。
+ * 提示：
+ * * 1 <= strs.length <= 104
+ * * 0 <= strs[i].length <= 100
+ * * strs[i] 仅包含小写字母
+ *
+ * 链接：https://leetcode.cn/problems/group-anagrams/
+ */
 
 class Solution {
     public List<List<String>> groupAnagrams(String[] strs) {
@@ -27,4 +38,3 @@ public class T49 {
         s.groupAnagrams(strs);
     }
 }
-

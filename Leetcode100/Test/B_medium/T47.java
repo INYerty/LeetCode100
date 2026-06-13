@@ -3,6 +3,16 @@ package Test.B_medium;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+/**
+ * 47. 全排列 II
+ *
+ * 给定一个可包含重复数字的序列 nums ，按任意顺序 返回所有不重复的全排列。
+ * 提示：
+ * * 1 <= nums.length <= 8
+ * * -10 <= nums[i] <= 10
+ *
+ * 链接：https://leetcode.cn/problems/permutations-ii/
+ */
 
 public class T47 {
     public List<List<Integer>> permuteUnique(int[] nums) {

@@ -4,6 +4,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
+/**
+ * 145. 二叉树的后序遍历
+ *
+ * 给你一棵二叉树的根节点 root ，返回其节点值的 后序遍历 。
+ * 提示：
+ * * 树中节点的数目在范围 [0, 100] 内
+ * * -100 <= Node.val <= 100
+ * 进阶：递归算法很简单，你可以通过迭代算法完成吗？
+ *
+ * 链接：https://leetcode.cn/problems/binary-tree-postorder-traversal/
+ */
 
 public class T145 {
     // 后序遍历 左右根

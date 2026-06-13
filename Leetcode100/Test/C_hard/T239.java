@@ -1,6 +1,19 @@
 package Test.C_hard;
 import java.util.Deque;
 import java.util.LinkedList;
+/**
+ * 239. 滑动窗口最大值
+ *
+ * 给你一个整数数组 nums，有一个大小为 k 的滑动窗口从数组的最左侧移动到数组的最右侧。你只可以看到在滑动窗口内的 k 个数字。
+ * 滑动窗口每次只向右移动一位。
+ * 返回 滑动窗口中的最大值 。
+ * 提示：
+ * * 1 <= nums.length <= 105
+ * * -104 <= nums[i] <= 104
+ * * 1 <= k <= nums.length
+ *
+ * 链接：https://leetcode.cn/problems/sliding-window-maximum/
+ */
 
 public class T239 {
     public int[] maxSlidingWindow(int[] nums, int k) {

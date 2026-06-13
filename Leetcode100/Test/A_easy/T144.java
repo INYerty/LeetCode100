@@ -5,6 +5,17 @@ import java.awt.image.AreaAveragingScaleFilter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+/**
+ * 144. 二叉树的前序遍历
+ *
+ * 给你二叉树的根节点 root ，返回它节点值的 前序 遍历。
+ * 提示：
+ * * 树中节点数目在范围 [0, 100] 内
+ * * -100 <= Node.val <= 100
+ * 进阶：递归算法很简单，你可以通过迭代算法完成吗？
+ *
+ * 链接：https://leetcode.cn/problems/binary-tree-preorder-traversal/
+ */
 
 public class T144 {
     //先序遍历  根左右

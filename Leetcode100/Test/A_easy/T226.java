@@ -4,6 +4,16 @@ import java.io.Flushable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+/**
+ * 226. 翻转二叉树
+ *
+ * 给你一棵二叉树的根节点 root ，翻转这棵二叉树，并返回其根节点。
+ * 提示：
+ * * 树中节点数目范围在 [0, 100] 内
+ * * -100 <= Node.val <= 100
+ *
+ * 链接：https://leetcode.cn/problems/invert-binary-tree/
+ */
 
 public class T226 {
     public TreeNode invertTree(TreeNode root) {

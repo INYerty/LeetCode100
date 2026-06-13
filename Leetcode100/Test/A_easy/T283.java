@@ -2,6 +2,18 @@ package Test.A_easy;
 
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * 283. 移动零
+ *
+ * 给定一个数组 nums，编写一个函数将所有 0 移动到数组的末尾，同时保持非零元素的相对顺序。
+ * 请注意 ，必须在不复制数组的情况下原地对数组进行操作。
+ * 提示:
+ * * 1 <= nums.length <= 104
+ * * -231 <= nums[i] <= 231 - 1
+ * 进阶：你能尽量减少完成的操作次数吗？
+ *
+ * 链接：https://leetcode.cn/problems/move-zeroes/
+ */
 
 public class T283 {
     public void moveZeroes(int[] nums) {

@@ -3,6 +3,16 @@ package Test.B_medium;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+/**
+ * 131. 分割回文串
+ *
+ * 给你一个字符串 s，请你将 s 分割成一些 子串，使每个子串都是 回文串 。返回 s 所有可能的分割方案。
+ * 提示：
+ * * 1 <= s.length <= 16
+ * * s 仅由小写英文字母组成
+ *
+ * 链接：https://leetcode.cn/problems/palindrome-partitioning/
+ */
 
 public class T131 {
     public List<List<String>> partition(String s) {

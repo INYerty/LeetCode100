@@ -3,6 +3,19 @@ package Test.B_medium;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+/**
+ * 40. 组合总和 II
+ *
+ * 给定一个候选人编号的集合 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
+ * candidates 中的每个数字在每个组合中只能使用 一次 。
+ * 注意：解集不能包含重复的组合。
+ * 提示:
+ * * 1 <= candidates.length <= 100
+ * * 1 <= candidates[i] <= 50
+ * * 1 <= target <= 30
+ *
+ * 链接：https://leetcode.cn/problems/combination-sum-ii/
+ */
 
 public class T40 {
     public List<List<Integer>> combinationSum2(int[] candidates, int target) {

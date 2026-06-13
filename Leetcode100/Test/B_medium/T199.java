@@ -3,6 +3,16 @@ package Test.B_medium;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+/**
+ * 199. 二叉树的右视图
+ *
+ * 给定一个二叉树的 根节点 root，想象自己站在它的右侧，按照从顶部到底部的顺序，返回从右侧所能看到的节点值。
+ * 提示:
+ * * 二叉树的节点个数的范围是 [0,100]
+ * * -100 <= Node.val <= 100
+ *
+ * 链接：https://leetcode.cn/problems/binary-tree-right-side-view/
+ */
 
 public class T199 {
     /*public List<Integer> rightSideView(TreeNode root) {

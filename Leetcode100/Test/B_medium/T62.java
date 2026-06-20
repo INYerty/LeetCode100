@@ -1,5 +1,7 @@
 package Test.B_medium;
 
+import java.util.Arrays;
+
 /**
  * 一个机器人位于一个 m x n 网格的左上角 （起始点在下图中标记为 “Start” ）。
  *
@@ -11,8 +13,35 @@ package Test.B_medium;
  */
 
 public class T62 {
-    //TODO 明天在做 今天来济南玩了
     public int uniquePaths(int m, int n) {
-        return 0;
+        if(m==0||n==0) return 0;
+        if(m==1||n==1) return 1;
+        int[][] dp = new int[m][n];
+        for (int i = 0; i < n; i++) {
+            dp[0][i] = 1;
+        }
+        for (int i = 0; i < m; i++) {
+            dp[i][0] = 1;
+        }
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n ; j++) {
+                for(int k = 0;k<=j;k++){
+                    dp[i][j] += dp[i-1][k];
+                }
+            }
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                System.out.print(dp[i][j] + " ");
+            }
+            System.out.println();
+        }
+        return dp[m-1][n-1];
+    }
+
+    public static void main(String[] args) {
+        int m = 3,n=7;
+        T62 t62 = new T62();
+        System.out.println(t62.uniquePaths(m, n));
     }
 }

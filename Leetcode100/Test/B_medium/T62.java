@@ -14,7 +14,7 @@ import java.util.Arrays;
 
 public class T62 {
     public int uniquePaths(int m, int n) {
-        if(m==0||n==0) return 0;
+        /*if(m==0||n==0) return 0;
         if(m==1||n==1) return 1;
         int[][] dp = new int[m][n];
         for (int i = 0; i < n; i++) {
@@ -35,6 +35,26 @@ public class T62 {
                 System.out.print(dp[i][j] + " ");
             }
             System.out.println();
+        }
+        return dp[m-1][n-1];*/
+
+        // way2:
+        int[][] dp = new int[m][n];
+        for(int i = 0;i<m;i++){
+            for(int j = 0;j<n;j++){
+                if(i == 0 || j == 0){
+                    dp[i][j] = 1;
+                }
+            }
+        }
+        for(int i = 1;i<m;i++){
+            for(int j = 1;j<n;j++){
+                int sum = 0;
+                for(int k = 0;k<=j;k++){
+                    sum += dp[i-1][k];
+                }
+                dp[i][j] = sum;
+            }
         }
         return dp[m-1][n-1];
     }

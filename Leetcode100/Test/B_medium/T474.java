@@ -15,7 +15,49 @@ package Test.B_medium;
  */
 public class T474 {
     public int findMaxForm(String[] strs, int m, int n) {
-        return 0;
+        int[][] times = new int[strs.length][2];
+        for(int i = 0;i<strs.length;i++){
+            int one = 0;
+            int zero = 0;
+            char[] charArray = strs[i].toCharArray();
+            for(char ch : charArray){
+                if(ch == '0'){
+                    zero++;
+                } else if (ch == '1') {
+                    one++;
+                }
+            }
+            int[] index = {zero, one};
+            times[i] = index;
+        }
+        /*for (int i = 0; i < strs.length; i++) {
+            for (int j = 0; j < 2; j++) {
+                System.out.print(indexs[i][j]);
+            }
+            System.out.println();
+        }*/
+
+        int[][] dp = new int[m+1][n+1];
+        dp[0][0] = 0;
+        for (int i = 0; i < times.length; i++) {
+            int[] time = times[i];
+            for (int j = m; j >= times[i][0]; j--) {
+                for (int k = n; k >= times[i][1] ; k--) {
+                    dp[j][k] = Math.max(dp[j-time[0]][k-time[1]] + 1,dp[j][k]);
+                }
+            }
+        }
+
+//        //打印dp
+//        for (int i = 0; i < m; i++) {
+//            for (int j = 0; j < n; j++) {
+//                System.out.print(dp[i][j]);
+//            }
+//            System.out.println();
+//        }
+
+
+        return dp[m][n];
     }
 
     public static void main(String[] args) {
